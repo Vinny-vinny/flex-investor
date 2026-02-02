@@ -4,12 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-class UserProduct extends Model
+class Invoice extends Model
 {
-    use HasFactory;
-
-    protected $table = 'investor_user_products';
+    use HasFactory, SoftDeletes;
 
     protected $guarded = [];
+    protected $table = 'investor_invoices';
 }

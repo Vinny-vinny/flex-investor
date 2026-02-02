@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProductsController;
+use App\Http\Controllers\UsersController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -15,6 +16,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/stk-push', function () {
+    $response = STK::request(5)
+        ->from('254704522671')
+        ->usingReference('234233555', 'stk push')
+        ->push();
+});
+
 Route::group(["prefix" => "v1"], function () {
-Route::get("products", [ProductsController::class, "index"]);
+    Route::get("products", [ProductsController::class, "index"]);
+    Route::post("join", [ProductsController::class, "join"]);
+    Route::get("user-by-phone/{phone}", [UsersController::class, "getUserByPhone"]);
+    Route::post("register", [UsersController::class, "onboardUser"]);
 });

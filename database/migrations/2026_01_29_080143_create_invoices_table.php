@@ -11,10 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('investor_messages', function (Blueprint $table) {
+        Schema::create('investor_invoices', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('investor_id');
+            $table->bigInteger('user_id');
+            $table->string('invoice_number');
+            $table->bigInteger("product_id");
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
@@ -23,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('investor_messages');
+        Schema::dropIfExists('investor_invoices');
     }
 };
