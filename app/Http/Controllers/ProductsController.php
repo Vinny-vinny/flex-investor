@@ -58,7 +58,7 @@ class ProductsController extends Controller
             ]
         );
 
-        UserProduct::updateOrCreate([
+        $product = UserProduct::updateOrCreate([
             'user_id' => $user->id,
             'product_id' => $request->product_id
         ], [
@@ -67,7 +67,7 @@ class ProductsController extends Controller
             ]
         );
         PaymentGatewayService::charge($user->user, $invoice->invoice_number, $request->deposit_amount, $phone);
-        return response()->json("success");
+        return response()->json($product);
     }
 
 }
