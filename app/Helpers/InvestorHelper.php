@@ -20,7 +20,7 @@ class InvestorHelper
                 . Str::replaceFirst('O', 'K',
                     Str::replaceFirst('i', 'L', Str::random(3))
                 )
-                . mt_rand(10000, 99999)
+                . mt_rand(100, 999)
             );
 
         if (Invoice::where('invoice_number', $ref)->exists()) {
