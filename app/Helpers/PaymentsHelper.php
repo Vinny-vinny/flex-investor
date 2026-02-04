@@ -12,8 +12,9 @@ use SmoDav\Mpesa\Laravel\Facades\STK;
 class PaymentsHelper
 {
 
-    public static function create(array $data, $callbackData=[])
+    public static function create(array $data)
     {
+        info("payments helper create ".json_encode($data));
         if (!isset($data['txn_code'])) {
             info("txn_code is null ".json_encode($data));
             return false;

@@ -14,9 +14,8 @@ class MpesaReader
      *
      * @return An array of data that is to be saved in the database.
      */
-    public static function stkListener($jsonData): array
+    public static function stkListener($data): array
     {
-        $data = json_decode($jsonData)->stkCallback;
         info("ggg ".json_encode($data));
         $init = PaymentInitializa::where('txn_converstion_id',$data->CheckoutRequestID)->first();
         info("iinit ".json_encode($data));

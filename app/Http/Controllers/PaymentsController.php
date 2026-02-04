@@ -11,8 +11,8 @@ class PaymentsController extends Controller
 
     public function handleC2bCallback(Request $request)
     {
-        $data = MpesaReader::stkListener(json_encode($request->all()));
+        $data = MpesaReader::stkListener($request->all());
         info(json_encode($request->all()));
-        return PaymentsHelper::create($data,json_encode($request->all()));
+        return PaymentsHelper::create($data);
     }
 }
