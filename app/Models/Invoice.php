@@ -12,4 +12,9 @@ class Invoice extends Model
 
     protected $guarded = [];
     protected $table = 'investor_invoices';
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }

@@ -9,10 +9,19 @@ use Illuminate\Http\Request;
 class PaymentsController extends Controller
 {
 
-    public function handleC2bCallback(Request $request)
+    public function handleStkCallback(Request $request)
     {
         $data = MpesaReader::stkListener($request->all());
         info(json_encode($request->all()));
         return PaymentsHelper::create($data);
     }
+
+    public function handleC2bCallback(Request $request)
+    {
+        $data = MpesaReader::c2BListener($request->all());
+        info(json_encode($request->all()));
+        return PaymentsHelper::create($data);
+    }
+
+
 }
