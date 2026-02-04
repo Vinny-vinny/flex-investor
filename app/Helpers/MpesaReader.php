@@ -54,9 +54,8 @@ class MpesaReader
         return $responseData;
     }
 
-    public static function c2BListener($jsonData)
+    public static function c2BListener($data): array
     {
-        $data = json_decode($jsonData, true);
         return (array)[
             'result_code' => 0,
             'result_description' => 'success',
