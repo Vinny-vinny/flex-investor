@@ -21,6 +21,7 @@ class PaymentGatewayService
         $response = STK::request((int)$amount)
             ->from($phoneNumber)
             ->usingReference($requestId, $description)
+            ->setCallback("")
             ->push();
 
         info(json_encode($response));

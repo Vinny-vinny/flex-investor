@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PaymentsController;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\UsersController;
 use Illuminate\Http\Request;
@@ -28,4 +29,5 @@ Route::group(["prefix" => "v1"], function () {
     Route::post("join", [ProductsController::class, "join"]);
     Route::get("user-by-phone/{phone}", [UsersController::class, "getUserByPhone"]);
     Route::post("register", [UsersController::class, "onboardUser"]);
+    Route::post("handle-stk-callback", [PaymentsController::class, "handleC2bCallback"]);
 });

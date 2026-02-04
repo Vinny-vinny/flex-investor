@@ -12,4 +12,8 @@ class UserProduct extends Model
     protected $table = 'investor_user_products';
 
     protected $guarded = [];
+
+    public function invoice() {
+        return $this->hasOne(Invoice::class,'id','invoice_id');
+    }
 }
