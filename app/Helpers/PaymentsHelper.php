@@ -15,8 +15,7 @@ class PaymentsHelper
     public static function create(array $data)
     {
         info("payments helper create ".json_encode($data));
-        if (!isset($data['txn_code'])) {
-            info("txn_code is null ".json_encode($data));
+        if (!isset($data['txn_code']) && $data['result_code'] !=0) {
             return false;
         }
 
