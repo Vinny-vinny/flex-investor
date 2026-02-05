@@ -85,8 +85,8 @@ class ProductsController extends Controller
             "package_name" => $invoice->product->product_name,
             "next_deposit_amount" => $invoice->product->base_amount,
             "phone_number" => $invoice->user->userDetail->phone_number,
-            "constant_weekly" => round($invoice->product->target/52),
-            "constant_monthly" => round($invoice->product->target/12),
+            "constant_weekly" => round($invoice->product->target_amount/52),
+            "constant_monthly" => round($invoice->product->target_amount/12),
             "type" => "onboard"
         ];
 
