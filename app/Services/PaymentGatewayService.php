@@ -11,20 +11,16 @@ class PaymentGatewayService
 {
     public static function charge(User $user, $requestId, $amount, $phone = "", $description = "FlexInvestor Payment")
     {
-        info('----- '.$phone);
         if ($phone) {
             $phoneNumber = $phone;
         } else {
             $phoneNumber = $user->userDetail->phone_number;
         }
-        info("===== ".$phoneNumber);
         $response = STK::request((int)$amount)
             ->from($phoneNumber)
             ->usingReference($requestId, $description)
             ->setCallback("")
             ->push();
-
-        info(json_encode($response));
 
         if (isset($response->ResponseCode) && $response->ResponseCode == 0) {
             $invoice = Invoice::where('invoice_number',$requestId)->first();

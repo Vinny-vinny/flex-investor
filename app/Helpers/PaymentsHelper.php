@@ -80,7 +80,7 @@ class PaymentsHelper
             }
             if (!$invoice) {
                 info("Invoice not found ".json_encode($data));
-                return;
+                return false;
             }
 
             return InPayment::create([
@@ -94,6 +94,5 @@ class PaymentsHelper
             ]);
         }
     }
-
 
 }
