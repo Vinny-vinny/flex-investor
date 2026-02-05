@@ -10,12 +10,14 @@ use App\Models\UserDetail;
 use App\Models\UserProduct;
 use App\Services\PaymentGatewayService;
 use App\Services\WalletService;
+use App\Traits\DataTransfer;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class ProductsController extends Controller
 {
+    use DataTransfer;
     protected WalletService $walletService;
 
     public function __construct(WalletService $walletService)
@@ -73,9 +75,22 @@ class ProductsController extends Controller
                 'deadline' => Carbon::now()->addYear()
             ]
         );
+
         //create wallet here
         $this->walletService->createWallet($invoice->user, $invoice->product->product_name, $invoice->product->slug);
         PaymentGatewayService::charge($user->user, $invoice->invoice_number, $request->deposit_amount, $phone);
+
+        //send notifications
+         $payload = [
+            "package_name" => $invoice->product->product_name,
+            "next_deposit_amount" => $invoice->product->base_amount,
+            "phone_number" => $invoice->user->userDetail->phone_number,
+            "constant_weekly" => round($invoice->product->target/52),
+            "constant_monthly" => round($invoice->product->target/12),
+            "type" => "save"
+        ];
+
+        $this->postRequest(env('FLEXSAKO_BASE_URL').'v1/flex-investor/send-sms',$payload);
         return response()->json($product);
     }
 
