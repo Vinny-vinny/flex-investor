@@ -9,12 +9,19 @@ use App\Models\Product;
 use App\Models\UserDetail;
 use App\Models\UserProduct;
 use App\Services\PaymentGatewayService;
+use App\Services\WalletService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class ProductsController extends Controller
 {
+    protected WalletService $walletService;
+
+    public function __construct(WalletService $walletService)
+    {
+        $this->walletService = $walletService;
+    }
     public function index()
     {
         return response()->json(ProductsResource::collection(Product::all()));
@@ -66,6 +73,8 @@ class ProductsController extends Controller
                 'deadline' => Carbon::now()->addYear()
             ]
         );
+        //create wallet here
+        $this->walletService->createWallet($invoice->user, $product->product_name, $product->slug);
         PaymentGatewayService::charge($user->user, $invoice->invoice_number, $request->deposit_amount, $phone);
         return response()->json($product);
     }
