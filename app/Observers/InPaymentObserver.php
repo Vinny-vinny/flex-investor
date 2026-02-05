@@ -32,7 +32,7 @@ class InPaymentObserver
             "amount" => $inPayment->payment_amount,
             "phone_number" => $inPayment->user->userDetail->phone_number,
             "balance" => $product->target_amount - $totalPaid,
-            "type" => "onboard"
+            "type" => "save"
         ];
         $this->postRequest(env('FLEXSAKO_BASE_URL').'v1/flex-investor/send-sms',$payload);
     }

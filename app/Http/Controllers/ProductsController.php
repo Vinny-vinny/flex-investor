@@ -87,7 +87,7 @@ class ProductsController extends Controller
             "phone_number" => $invoice->user->userDetail->phone_number,
             "constant_weekly" => round($invoice->product->target/52),
             "constant_monthly" => round($invoice->product->target/12),
-            "type" => "save"
+            "type" => "onboard"
         ];
 
         $this->postRequest(env('FLEXSAKO_BASE_URL').'v1/flex-investor/send-sms',$payload);
