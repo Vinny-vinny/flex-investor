@@ -3,8 +3,8 @@
 use App\Http\Controllers\PaymentsController;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\UsersController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use SmoDav\Mpesa\Laravel\Facades\STK;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,4 +31,6 @@ Route::group(["prefix" => "v1"], function () {
     Route::post("register", [UsersController::class, "onboardUser"]);
     Route::post("handle-stk-callback", [PaymentsController::class, "handleStkCallback"]);
     Route::post("handle-c2b-callback", [PaymentsController::class, "handleC2bCallback"]);
+    Route::post("save", [ProductsController::class, "save"]);
+    Route::post("my-chamas/{phoneNumber}", [ProductsController::class, "getUserChamas"]);
 });

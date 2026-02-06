@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helpers\InvestorHelper;
 use App\Http\Resources\ProductsResource;
+use App\Http\Resources\UserChamasResource;
 use App\Models\Invoice;
 use App\Models\Product;
 use App\Models\UserDetail;
@@ -94,4 +95,46 @@ class ProductsController extends Controller
         return response()->json($product);
     }
 
+    public function save(Request $request)
+    {
+        $phone = format_phone($request->phone_number);
+        $validator = Validator::make(array_merge($request->all(), ['phone_number' => $phone]), [
+            "product_id" => "required|integer|exists:investor_user_products,id",
+            "amount" => "required|integer|min:1",
+            'phone_number' =>  "required|exists:investor_user_details,phone_number",
+        ],[
+            "product_id.integer" => "Product id must be an integer",
+            "product_id.exists" =>"You have not joined the selected package.",
+            "product_id.required" => "Product id is required",
+            "amount.required" => "Amount is required",
+            "amount.integer" => "Amount must be an integer",
+            "amount.min" => "Amount must be at least 1",
+            "phone_number.required" => "Phone number is required",
+            "phone_number.exists" => "User with the provided phone number is not found.",
+        ]);
+
+        if ($validator->fails()) {
+        return response()->json($validator->errors(), 422);
+        }
+        $userD = UserDetail::where('phone_number', $phone)->first();
+        $userProduct = UserProduct::where('product_id', $request->product_id)->where('user_id',$userD->user_id)->first();
+
+        if (!$userProduct) {
+            return response()->json("The selected package doesn't belong to the use with the used phone number.", 404);
+        }
+
+        PaymentGatewayService::charge($userD->user, $userProduct->invoice->invoice_number, $request->amount, $phone);
+        return response()->json($userProduct);
+    }
+
+    public function getUserChamas($phoneNumber)
+    {
+        $userDetail = UserDetail::where("phone_number", $phoneNumber)->first();
+        if (!$userDetail) {
+            return response()->json("The selected phone number does not exist.", 404);
+        }
+
+        $userProducts = UserChamasResource::collection(UserProduct::where("user_id", $userDetail->user_id)->get());
+        return response()->json($userProducts);
+    }
 }
