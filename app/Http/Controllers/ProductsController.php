@@ -129,7 +129,7 @@ class ProductsController extends Controller
 
     public function getUserChamas($phoneNumber)
     {
-        $userDetail = UserDetail::where("phone_number", $phoneNumber)->first();
+        $userDetail = UserDetail::where("phone_number", format_phone($phoneNumber))->first();
         if (!$userDetail) {
             return response()->json("The selected phone number does not exist.", 404);
         }
