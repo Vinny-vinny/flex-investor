@@ -20,7 +20,7 @@ class UserChamasResource extends JsonResource
             "id" => $this->id,
             "product_id" => $this->product_id,
             "product_name" => $this->product->product_name,
-            "saved_amount" => $this->user->getWallet($this->product->product_name)->balance,
+            "saved_amount" => optional($this->user->getWallet($this->product->product_name))?->balance,
         ];
     }
 }
