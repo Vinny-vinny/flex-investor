@@ -14,7 +14,7 @@ class UserProduct extends Model
     protected $guarded = [];
 
     public function invoice() {
-        return $this->hasOne(Invoice::class,'id','invoice_id');
+        return $this->belongsTo(Invoice::class,"product_id");
     }
 
     public function product() {
