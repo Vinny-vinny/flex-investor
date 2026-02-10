@@ -99,7 +99,7 @@ class ProductsController extends Controller
     {
         $phone = format_phone($request->phone_number);
         $validator = Validator::make(array_merge($request->all(), ['phone_number' => $phone]), [
-            "product_id" => "required|integer|exists:investor_user_products,id",
+            "product_id" => "required|integer|exists:investor_user_products,product_id",
             "amount" => "required|integer|min:1",
             'phone_number' =>  "required|exists:investor_user_details,phone_number",
         ],[
