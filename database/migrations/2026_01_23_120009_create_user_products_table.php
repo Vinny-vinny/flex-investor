@@ -18,6 +18,7 @@ return new class extends Migration
             $table->dateTime("enrollment_date");
             $table->dateTime("deadline");
             $table->enum("status", ["active", "closed"])->default("active");
+            $table->bigInteger("invoice_id");
             $table->timestamps();
             $table->softDeletes();
         });

@@ -70,7 +70,8 @@ class ProductsController extends Controller
 
         $product = UserProduct::updateOrCreate([
             'user_id' => $user->id,
-            'product_id' => $request->product_id
+            'product_id' => $request->product_id,
+            'invoice_id' => $invoice->id
         ], [
                 'enrollment_date' => Carbon::now(),
                 'deadline' => Carbon::now()->addYear()
