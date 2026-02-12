@@ -79,7 +79,7 @@ class ProductsController extends Controller
         );
 
         //create wallet here
-        $this->walletService->createWallet($invoice->user, $invoice->product->product_name, $invoice->product->slug);
+        $this->walletService->createWallet($invoice->user, $invoice->product->slug, $invoice->product->slug);
         PaymentGatewayService::charge($user->user, $invoice->invoice_number, $request->deposit_amount, $phone);
 
         //send notifications
