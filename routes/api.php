@@ -29,6 +29,7 @@ Route::group(["prefix" => "v1"], function () {
     Route::post("join", [ProductsController::class, "join"]);
     Route::get("user-by-phone/{phone}", [UsersController::class, "getUserByPhone"]);
     Route::post("register", [UsersController::class, "onboardUser"]);
+    Route::post("promoter-signup", [UsersController::class, "promoterSignup"]);
     Route::post("handle-stk-callback", [PaymentsController::class, "handleStkCallback"]);
     Route::post("handle-c2b-callback", [PaymentsController::class, "handleC2bCallback"]);
     Route::post("save", [ProductsController::class, "save"]);

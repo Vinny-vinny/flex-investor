@@ -92,7 +92,7 @@ class ProductsController extends Controller
             "type" => "onboard"
         ];
 
-        $this->postRequest(env('FLEXSAKO_BASE_URL').'v1/flex-investor/send-sms',$payload);
+       $this->postRequest(env('FLEXSAKO_BASE_URL').'v1/flex-investor/send-sms',$payload);
         return response()->json($product);
     }
 
