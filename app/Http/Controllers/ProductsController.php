@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Helpers\InvestorHelper;
 use App\Http\Resources\ProductsResource;
 use App\Http\Resources\UserChamasResource;
+use App\Jobs\SmsJob;
 use App\Models\Invoice;
 use App\Models\Product;
 use App\Models\UserDetail;
@@ -92,7 +93,8 @@ class ProductsController extends Controller
             "type" => "onboard"
         ];
 
-       $this->postRequest(env('FLEXSAKO_BASE_URL').'v1/flex-investor/send-sms',$payload);
+         info("walalalaa");
+         SmsJob::dispatch($payload);
         return response()->json($product);
     }
 

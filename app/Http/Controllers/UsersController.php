@@ -92,40 +92,49 @@ class UsersController
         $request['deposit_amount'] = Product::find($request->product_id)->base_amount;
 
         $promoter_data = $request->promoter_data;
+        //agent onboarding details
         if ($promoter_data) {
             $phone = format_phone($promoter_data['phone_number']);
-            $promoter_user = UserDetail::where('phone_number', $phone)->first();
-            if (!$promoter_user) {
-                $romoterUser = User::firstOrCreate(["email" => $promoter_data['email']?:$promoter_data['phone_number']."@gmail.com"],[
-                    "password" => bcrypt($promoter_data['phone_number'])
-                ]);
-                $romoterUser->userDetail()->updateOrCreate(
-                    ['phone_number' => $phone],
-                    [
-                        'phone_number' => $phone,
-                        'first_name'   => $promoter_data['first_name'],
-                        'last_name'    => $promoter_data['last_name'],
-                        'dob'          => $promoter_data['dob'] ?: Carbon::parse("1990-01-01"),
-                        'gender'       => "male",
-                        'id_number'    => $promoter_data['id_number']
-                    ]
-                );
-            }
+            $romoterUser = User::firstOrCreate(["email" => $promoter_data['email'] ?: $promoter_data['phone_number'] . "@gmail.com"], [
+                "password" => bcrypt($promoter_data['phone_number'])
+            ]);
+            $romoterUser->userDetail()->updateOrCreate(
+                ['phone_number' => $phone],
+                [
+                    'phone_number' => $phone,
+                    'first_name' => $promoter_data['first_name'],
+                    'last_name' => $promoter_data['last_name'],
+                    'dob' => $promoter_data['dob'] ?: Carbon::parse("1990-01-01"),
+                    'gender' => "male",
+                    'id_number' => $promoter_data['id_number']
+                ]
+            );
+            $romoterUser->agent()->updateOrCreate(['user_id' => $romoterUser->id], []);
         }
-        $user = User::firstOrCreate(["email" => $request->email?:$request->phone_number."@gmail.com"],[
+        
+        //customer onboarding
+        $user = User::firstOrCreate(["email" => $request->email ?: $request->phone_number . "@gmail.com"], [
             "password" => bcrypt($request->phone_number)
         ]);
         $userDetails = $user->userDetail()->updateOrCreate(
             ['phone_number' => format_phone($request->phone_number)],
             [
                 'phone_number' => format_phone($request->phone_number),
-                'first_name'   => $request->first_name,
-                'last_name'    => $request->last_name,
-                'dob'          => $request->dob ? Carbon::parse($request->dob): Carbon::parse("1990-01-01"),
-                'gender'       => $request->gender,
-                'id_number'    => $request->id_number,
+                'first_name' => $request->first_name,
+                'last_name' => $request->last_name,
+                'dob' => $request->dob ? Carbon::parse($request->dob) : Carbon::parse("1990-01-01"),
+                'gender' => $request->gender,
+                'id_number' => $request->id_number,
             ]
         );
+        $join_data = [
+            "phone_number" => format_phone($request->phone_number),
+            "product_id" => $request->product_id,
+            "deposit_amount" => 500
+        ];
+
+        $joinRequest = (new Request())->merge($join_data);
+        app(ProductsController::class)->join($joinRequest);
         return response()->json($userDetails);
     }
 }
