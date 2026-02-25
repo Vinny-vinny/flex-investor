@@ -33,7 +33,7 @@ class InPaymentObserver
             "phone_number" => $inPayment->user->userDetail->phone_number,
             "total_saved" => $totalPaid,
             "balance" => $product->target_amount - $totalPaid,
-            "account_number" => $inPayment->invoice->account_number,
+            "account_number" => $inPayment->invoice->invoice_number,
             "type" => "save"
         ];
         $this->postRequest(env('FLEXSAKO_BASE_URL').'v1/flex-investor/send-sms',$payload);
