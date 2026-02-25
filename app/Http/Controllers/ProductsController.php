@@ -93,7 +93,6 @@ class ProductsController extends Controller
             "type" => "onboard"
         ];
 
-         info("walalalaa");
          SmsJob::dispatch($payload);
         return response()->json($product);
     }

@@ -111,7 +111,6 @@ class UsersController
             );
             $romoterUser->agent()->updateOrCreate(['user_id' => $romoterUser->id], []);
         }
-        
         //customer onboarding
         $user = User::firstOrCreate(["email" => $request->email ?: $request->phone_number . "@gmail.com"], [
             "password" => bcrypt($request->phone_number)
@@ -130,7 +129,7 @@ class UsersController
         $join_data = [
             "phone_number" => format_phone($request->phone_number),
             "product_id" => $request->product_id,
-            "deposit_amount" => 500
+            "deposit_amount" => Product::find($request->product_id)->base_amount,
         ];
 
         $joinRequest = (new Request())->merge($join_data);

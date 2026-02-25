@@ -28,10 +28,12 @@ class InPaymentObserver
         //send notifications
         $totalPaid = $this->walletService->getBalance($inPayment->user,$product->slug);
         $payload = [
-            "name" => $inPayment->user->userDetail->first_name,
+            "package_name" => $product->product_name,
             "amount" => $inPayment->payment_amount,
             "phone_number" => $inPayment->user->userDetail->phone_number,
+            "total_saved" => $totalPaid,
             "balance" => $product->target_amount - $totalPaid,
+            "account_number" => $inPayment->invoice->account_number,
             "type" => "save"
         ];
         $this->postRequest(env('FLEXSAKO_BASE_URL').'v1/flex-investor/send-sms',$payload);
