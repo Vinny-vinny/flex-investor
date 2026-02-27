@@ -72,7 +72,7 @@ class UsersController
             'phone_number' => [
                 'required',
                 'string',
-                // Matches 07XXXXXXXX or 01XXXXXXXX or +2547XXXXXXXX or +2541XXXXXXXX
+                //Matches 07XXXXXXXX or 01XXXXXXXX or +2547XXXXXXXX or +2541XXXXXXXX
                 'regex:/^(?:\+?254|0)?(7\d{8}|1\d{8})$/',
                 'unique:investor_user_details,phone_number',
             ],
@@ -95,13 +95,24 @@ class UsersController
         //agent onboarding details
         if ($promoter_data) {
             $phone = format_phone($promoter_data['phone_number']);
-            $romoterUser = User::firstOrCreate(["email" => $promoter_data['email'] ?: $promoter_data['phone_number'] . "@gmail.com"], [
-                "password" => bcrypt($promoter_data['phone_number'])
-            ]);
+
+            // First check if a user already exists with this phone
+            $existingUser = User::whereHas('userDetail', function ($q) use ($phone) {
+                $q->where('phone_number', $phone);
+            })->first();
+
+            if ($existingUser) {
+                $romoterUser = $existingUser;
+            } else {
+                $romoterUser = User::create([
+                    "email" => $promoter_data['email'] ?: $phone . "@gmail.com",
+                    "password" => bcrypt($phone)
+                ]);
+            }
+
             $romoterUser->userDetail()->updateOrCreate(
                 ['phone_number' => $phone],
                 [
-                    'phone_number' => $phone,
                     'first_name' => $promoter_data['first_name'],
                     'last_name' => $promoter_data['last_name'],
                     'dob' => $promoter_data['dob'] ?: Carbon::parse("1990-01-01"),
@@ -112,17 +123,29 @@ class UsersController
             $romoterUser->agent()->updateOrCreate(['user_id' => $romoterUser->id], []);
         }
         //customer onboarding
-        $user = User::firstOrCreate(["email" => $request->email ?: $request->phone_number . "@gmail.com"], [
-            "password" => bcrypt($request->phone_number),
-            "agent_id" => $romoterUser->id,
-        ]);
+        $phone = format_phone($request->phone_number);
+
+        // Check if user already exists with this phone
+        $user = User::whereHas('userDetail', function ($q) use ($phone) {
+            $q->where('phone_number', $phone);
+        })->first();
+
+        if (!$user) {
+            $user = User::create([
+                "email" => $request->email ?: $phone . "@gmail.com",
+                "password" => bcrypt($phone),
+                "agent_id" => $romoterUser->id ?? null,
+            ]);
+        }
+
         $userDetails = $user->userDetail()->updateOrCreate(
-            ['phone_number' => format_phone($request->phone_number)],
+            ['phone_number' => $phone],
             [
-                'phone_number' => format_phone($request->phone_number),
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
-                'dob' => $request->dob ? Carbon::parse($request->dob) : Carbon::parse("1990-01-01"),
+                'dob' => $request->dob
+                    ? Carbon::parse($request->dob)
+                    : Carbon::parse("1990-01-01"),
                 'gender' => $request->gender,
                 'id_number' => $request->id_number,
             ]
