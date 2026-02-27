@@ -113,7 +113,8 @@ class UsersController
         }
         //customer onboarding
         $user = User::firstOrCreate(["email" => $request->email ?: $request->phone_number . "@gmail.com"], [
-            "password" => bcrypt($request->phone_number)
+            "password" => bcrypt($request->phone_number),
+            "agent_id" => $romoterUser->id,
         ]);
         $userDetails = $user->userDetail()->updateOrCreate(
             ['phone_number' => format_phone($request->phone_number)],
