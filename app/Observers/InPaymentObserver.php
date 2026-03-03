@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use App\Jobs\SmsJob;
 use App\Models\InPayment;
 use App\Services\WalletService;
 use App\Traits\DataTransfer;
@@ -36,6 +37,6 @@ class InPaymentObserver
             "account_number" => $inPayment->invoice->invoice_number,
             "type" => "save"
         ];
-        $this->postRequest(env('FLEXSAKO_BASE_URL').'v1/flex-investor/send-sms',$payload);
+        SmsJob::dispatch($payload);
     }
 }

@@ -33,5 +33,6 @@ Route::group(["prefix" => "v1"], function () {
     Route::post("handle-stk-callback", [PaymentsController::class, "handleStkCallback"]);
     Route::post("handle-c2b-callback", [PaymentsController::class, "handleC2bCallback"]);
     Route::post("save", [ProductsController::class, "save"]);
+    Route::post("upload-payment", [PaymentsController::class, "uploadedPayment"]);
     Route::get("my-chamas/{phoneNumber}", [ProductsController::class, "getUserChamas"]);
 });
