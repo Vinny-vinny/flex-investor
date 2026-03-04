@@ -50,7 +50,7 @@ class PaymentsHelper
                 $invoice_id = rand(10000,900000);
             }
 
-           return InPayment::create([
+           return InPayment::firstOrCreate(['payment_source_txn_id'=>$callback->txn_code],[
                 'user_id' => $user_id,
                 'invoice_id' => $invoice_id,
                 'payment_amount' => $callback->amount,
@@ -82,7 +82,7 @@ class PaymentsHelper
                 return false;
             }
 
-            return InPayment::create([
+            return InPayment::firstOrCreate(['payment_source_txn_id'=>$data['txn_code']],[
                 'user_id' => $member->user_id,
                 'invoice_id' =>$invoice->id,
                 'payment_amount' => $data['amount'],
