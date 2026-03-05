@@ -59,8 +59,7 @@ class PaymentsHelper
                 'payment_source_txn_id' => $callback->txn_code,
                 'txn_ref'   => $callback->txn_cross_ref
             ]);
-
-            // communicate Works payment
+            //communicate Works payment
     }
 
     public static function insertPayment($data)

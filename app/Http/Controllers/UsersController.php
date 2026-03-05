@@ -69,6 +69,9 @@ class UsersController
         $validator = Validator::make(array_merge($request->all(), ['phone_number' => $phone]), [
             'promoter_data' => 'required|array',
             'product_id' => 'required|integer|exists:investor_products,id',
+            'first_name' => 'required|string',
+            'last_name' => 'required|string',
+            'deposit_amount' => 'required|integer|min:1',
             'phone_number' => [
                 'required',
                 'string',
@@ -85,6 +88,9 @@ class UsersController
             "phone_number.unique" => "Phone number is already registered",
             'promoter_data.required' => 'Promoter data is required',
             'promoter_data.array' => 'Promoter data must be an array',
+            'first_name.required' => 'First name is required',
+            'last_name.required' => 'Last name is required',
+            'deposit_amount.required' => 'Deposit amount is required',
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
@@ -153,7 +159,7 @@ class UsersController
         $join_data = [
             "phone_number" => format_phone($request->phone_number),
             "product_id" => $request->product_id,
-            "deposit_amount" => Product::find($request->product_id)->base_amount,
+            "deposit_amount" => $request->deposit_amount,
         ];
 
         $joinRequest = (new Request())->merge($join_data);
