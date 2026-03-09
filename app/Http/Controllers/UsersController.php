@@ -95,8 +95,6 @@ class UsersController
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
-        $request['deposit_amount'] = Product::find($request->product_id)->base_amount;
-
         $promoter_data = $request->promoter_data;
         //agent onboarding details
         if ($promoter_data) {
